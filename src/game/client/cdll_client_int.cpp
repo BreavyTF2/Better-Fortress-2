@@ -2660,13 +2660,13 @@ void CHLClient::WriteSaveGameScreenshotOfSize( const char *pFilename, int width,
 
 CON_COMMAND(WriteGameScreenshot, "WriteSaveGameScreenshotOfSize")
 {
-	if (args.ArgC() == 5)
+	if (args.ArgC() == 6)
 	{
-		const char *pFilename = args[0];
-		int width = atoi(args[1]);
-		int height = atoi(args[2]);
-		int bCreatePowerOf2Padded = atoi(args[3]);
-		int bWriteVTF = atoi(args[4]);
+		const char *pFilename = args[1];
+		int width = atoi(args[2]);
+		int height = atoi(args[3]);
+		int bCreatePowerOf2Padded = atoi(args[4]);
+		int bWriteVTF = atoi(args[5]);
 		view->WriteSaveGameScreenshotOfSize( pFilename, width, height, !!bCreatePowerOf2Padded, !!bWriteVTF );
 	}
 	else

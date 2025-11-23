@@ -3012,7 +3012,7 @@ CTFCreateServerDialog::CTFCreateServerDialog(vgui::Panel* parent) : PropertyDial
 	// If this can be simplified, I'd gladly take it.
 
 	KeyValuesAD pFileKV( "OPTIONS" );
-	if ( !pFileKV->LoadFromFile( g_pFullFileSystem, DEFAULT_CREATE_SERVER_FILE, "MOD" ) && !pFileKV->LoadFromFile( g_pFullFileSystem, CREATE_SERVER_FILE, "MOD" ) )
+	if ( !pFileKV->LoadFromFile( g_pFullFileSystem, CREATE_SERVER_FILE, "MOD" ) && !pFileKV->LoadFromFile( g_pFullFileSystem, DEFAULT_CREATE_SERVER_FILE, "MOD" ) )
 		return;
 
 	int i = 0;
@@ -3765,7 +3765,7 @@ void CTFCreateServerDialog::OnThink()
 				//Msg("Current Selection: %s\n", name);
 				if( szMapName )
 				{
-					const char* szMapImage = CFmtStr("vgui/maps/menu_photos_%s", szMapName);
+					const char* szMapImage = CFmtStr("vgui/maps/menu_thumb_%s", szMapName);
 
 					IMaterial *pMapMaterial = materials->FindMaterial( szMapImage, TEXTURE_GROUP_VGUI, false );
 					if( pMapMaterial && !IsErrorMaterial( pMapMaterial ) )
