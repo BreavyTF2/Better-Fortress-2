@@ -4,7 +4,7 @@
 {
 	"ctf_2fort"
 	{
-		"bf_sign"
+		"cf_sign"
 		{
 			"0"
 			{

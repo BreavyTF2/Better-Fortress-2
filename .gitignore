@@ -607,6 +607,6 @@ tools/create_signature.bat
 tools/create_items_signature.py
 game/betterfortress/scripts/vscripts/shieldpic.nut
 game/betterfortress/scripts/vscripts/objectorid.nut
-game/betterfortress/cfg/bf_devtest_bots.cfg
-game/betterfortress/cfg/bf_devtest.cfg
+game/betterfortress/cfg/cf_devtest_bots.cfg
+game/betterfortress/cfg/cf_devtest.cfg
 game/betterfortress/scripts/population/sentrybuster.pop

@@ -14,8 +14,8 @@ struct EntityWhiteList_t
 	const char *pszEntName;
 };
 
-ConVar bf_teaserprops("bf_teaserprops", "1", FCVAR_REPLICATED, "Enable teaser props on mapspawn.");
-ConVar bf_teaserprops_type("bf_teaserprops_type", "mvm", FCVAR_REPLICATED, "Which teaser you want to spawn with?");
+ConVar cf_teaserprops("cf_teaserprops", "1", FCVAR_REPLICATED, "Enable teaser props on mapspawn.");
+ConVar cf_teaserprops_type("cf_teaserprops_type", "mvm", FCVAR_REPLICATED, "Which teaser you want to spawn with?");
 
 // limit the entities that can be created using this method
 EntityWhiteList_t g_szEntityWhiteList[] =
@@ -187,8 +187,8 @@ void CExtraMapEntity::SpawnExtraModel( void )
 
 				if ( ( flChance > 0.0f ) && ( RandomFloat( 0, 1 ) < flChance ) )
 				{
-					// Filter entities based on bf_teaserprops_type setting
-					const char* pszTeaserType = bf_teaserprops_type.GetString();
+					// Filter entities based on cf_teaserprops_type setting
+					const char* pszTeaserType = cf_teaserprops_type.GetString();
 					
 					// If Grocket type is selected, only allow rocket entities
 					if ( !V_strcmp( "grocket", pszTeaserType ) && V_strcmp( "entity_rocket", pszEntName ) )
@@ -254,7 +254,7 @@ void CExtraMapEntity::SpawnExtraModel( void )
 //-----------------------------------------------------------------------------
 void CExtraMapEntity_Rocket::Spawn( void )
 {
-	if ( !V_strcmp( "grocket", bf_teaserprops_type.GetString() ) )
+	if ( !V_strcmp( "grocket", cf_teaserprops_type.GetString() ) )
 	{
 
 		BaseClass::Spawn();
@@ -275,7 +275,7 @@ void CExtraMapEntity_Rocket::Precache_Internal( void )
 //-----------------------------------------------------------------------------
 void CExtraMapEntity_Carrier::Spawn( void )
 {
-	if ( !V_strcmp( "mvm", bf_teaserprops_type.GetString() ) )
+	if ( !V_strcmp( "mvm", cf_teaserprops_type.GetString() ) )
 	{
 
 		BaseClass::Spawn();
@@ -303,7 +303,7 @@ void CExtraMapEntity_Sign::Spawn( void )
 //-----------------------------------------------------------------------------
 void CExtraMapEntity_Saucer::Spawn( void )
 {
-	if ( !V_strcmp( "invasion", bf_teaserprops_type.GetString() ) )
+	if ( !V_strcmp( "invasion", cf_teaserprops_type.GetString() ) )
 	{
 
 		BaseClass::Spawn();

@@ -213,7 +213,7 @@ ConVar tf_damage_multiplier_red( "tf_damage_multiplier_red", "1.0", FCVAR_CHEAT,
 
 
 ConVar tf_max_voice_speak_delay( "tf_max_voice_speak_delay", "1.5", FCVAR_NOTIFY, "Max time after a voice command until player can do another one");
-extern ConVar bf_voicespam;
+extern ConVar cf_voicespam;
 
 ConVar tf_allow_player_use( "tf_allow_player_use", "0", FCVAR_NOTIFY, "Allow players to execute +use while playing." );
 
@@ -257,13 +257,13 @@ extern ConVar tf_powerup_mode;
 extern ConVar tf_mvm_buybacks_method;
 extern ConVar tf_mvm_buybacks_per_wave;
 extern ConVar tf_mvm_bot_flag_carrier_interval_to_1st_upgrade;
-extern ConVar bf_gamemode_mvmvs;
+extern ConVar cf_gamemode_mvmvs;
 extern ConVar tf_mvm_bot_flag_carrier_interval_to_2nd_upgrade;
 extern ConVar tf_mvm_bot_flag_carrier_interval_to_3rd_upgrade;
 extern ConVar tf_mvm_bot_flag_carrier_health_regen;
-extern ConVar bf_mvmvs_playstyle;
-extern ConVar bf_mvmvs_restrict_slots;
-extern ConVar bf_mvmvs_enable_human_busters;
+extern ConVar cf_mvmvs_playstyle;
+extern ConVar cf_mvmvs_restrict_slots;
+extern ConVar cf_mvmvs_enable_human_busters;
 
 #define TF_CANNONBALL_FORCE_SCALE	80.f
 #define TF_CANNONBALL_FORCE_UPWARD	300.f
@@ -2188,7 +2188,7 @@ void CTFPlayer::TFPlayerThink()
 	SetContextThink( &CTFPlayer::TFPlayerThink, gpGlobals->curtime, "TFPlayerThink" );
 	//MVM Versus - Spawn Protection 
 	// TODO: why does this function get called effectively twice? (one here and in MvMDeployBombThink) - main_thing
-	if( TFGameRules()->IsMannVsMachineMode() && bf_gamemode_mvmvs.GetBool() && GetTeamNumber() == TF_TEAM_PVE_INVADERS && !IsBot() )
+	if( TFGameRules()->IsMannVsMachineMode() && cf_gamemode_mvmvs.GetBool() && GetTeamNumber() == TF_TEAM_PVE_INVADERS && !IsBot() )
 	{
 		bool bInRespawnRoom = PointInRespawnRoom(this, WorldSpaceCenter(), true);
 		if( bInRespawnRoom )
@@ -2201,7 +2201,7 @@ void CTFPlayer::TFPlayerThink()
 				AddCustomAttribute( "no_attack", 1, 1.0f );
 		}
 	}
-	if( TFGameRules()->IsMannVsMachineMode() && bf_gamemode_mvmvs.GetBool() && GetTeamNumber() == TF_TEAM_PVE_INVADERS && !IsBot() && !TFGameRules()->InSetup() )
+	if( TFGameRules()->IsMannVsMachineMode() && cf_gamemode_mvmvs.GetBool() && GetTeamNumber() == TF_TEAM_PVE_INVADERS && !IsBot() && !TFGameRules()->InSetup() )
 	{
 		SetContextThink( &CTFPlayer::MvMDeployBombThink, gpGlobals->curtime, "MvMDeployBombThink" );
 	}
@@ -4785,16 +4785,16 @@ void CTFPlayer::Spawn()
 		ClearTags();
 		if( GetTeamNumber() == TF_TEAM_PVE_INVADERS )
 		{
-			// Use new bf_mvmvs_playstyle convar
-			switch( bf_mvmvs_playstyle.GetInt() )
+			// Use new cf_mvmvs_playstyle convar
+			switch( cf_mvmvs_playstyle.GetInt() )
 			{
 				case 0: // Classic - Spawn with loadout, random chances for giants/gatebots
 				{
 					// Get current counts for bosses and giants
 					int iCurrentBosses = CountBossRobots( TF_TEAM_PVE_INVADERS );
 					int iCurrentGiants = CountGiantRobots( TF_TEAM_PVE_INVADERS );
-					int iMaxBosses = bf_mvmvs_max_bosses.GetInt();
-					int iMaxGiants = bf_mvmvs_max_giants.GetInt();
+					int iMaxBosses = cf_mvmvs_max_bosses.GetInt();
+					int iMaxGiants = cf_mvmvs_max_giants.GetInt();
 					
 					//Spawn the player as Gatebot | 50% chance
 					if(random->RandomInt(0,1) == 1)
@@ -4910,8 +4910,8 @@ void CTFPlayer::Spawn()
 							// Get current counts for bosses and giants
 							int iCurrentBosses = CountBossRobots( TF_TEAM_PVE_INVADERS );
 							int iCurrentGiants = CountGiantRobots( TF_TEAM_PVE_INVADERS );
-							int iMaxBosses = bf_mvmvs_max_bosses.GetInt();
-							int iMaxGiants = bf_mvmvs_max_giants.GetInt();
+							int iMaxBosses = cf_mvmvs_max_bosses.GetInt();
+							int iMaxGiants = cf_mvmvs_max_giants.GetInt();
 							
 							// Filter spawners based on limits
 							CUtlVector< IPopulationSpawner * > validSpawners;
@@ -4953,7 +4953,7 @@ void CTFPlayer::Spawn()
 										iCurrentBosses, iMaxBosses, iCurrentGiants, iMaxGiants );
 									
 									// Apply weapon slot restrictions if enabled
-									if ( bf_mvmvs_restrict_slots.GetBool() && bf_mvmvs_playstyle.GetInt() == 1 )
+									if ( cf_mvmvs_restrict_slots.GetBool() && cf_mvmvs_playstyle.GetInt() == 1 )
 									{
 										CTFBotSpawner *pBotSpawner = dynamic_cast< CTFBotSpawner * >( pSelectedSpawner );
 										if ( pBotSpawner )
@@ -5476,12 +5476,12 @@ void CTFPlayer::InitClass( void )
 	m_PlayerAnimState->SetWalkSpeed( GetPlayerClass()->GetMaxSpeed() * 0.5 );
 
 	// Give default items for class.
-	// We want to prevent giving items in versus when using popfile playstyle (1) with bf_mvmvs_use_loadout disabled
+	// We want to prevent giving items in versus when using popfile playstyle (1) with cf_mvmvs_use_loadout disabled
 	bool bIsVersusWithPopfileAndNoLoadout = ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() && 
 											  GetTeamNumber() == TF_TEAM_PVE_INVADERS && 
-											  bf_gamemode_mvmvs.GetBool() && 
-											  bf_mvmvs_playstyle.GetInt() == 1 && 
-											  !bf_mvmvs_use_loadout.GetBool() );
+											  cf_gamemode_mvmvs.GetBool() && 
+											  cf_mvmvs_playstyle.GetInt() == 1 && 
+											  !cf_mvmvs_use_loadout.GetBool() );
 	
 	if( !bIsVersusWithPopfileAndNoLoadout || IsFakeClient() )
 	{
@@ -6159,8 +6159,8 @@ void CTFPlayer::ManageRegularWeapons( TFPlayerClassData_t *pData )
 	if ( TFGameRules() && TFGameRules()->GameModeUsesUpgrades() && !IsBot() ) 
 	{
 		// Check if this is MvM Versus mode and player is on Invaders team - clear upgrades before reapplying
-		extern ConVar bf_gamemode_mvmvs;
-		if ( bf_gamemode_mvmvs.GetBool() && GetTeamNumber() == TF_TEAM_PVE_INVADERS && g_pPopulationManager )
+		extern ConVar cf_gamemode_mvmvs;
+		if ( cf_gamemode_mvmvs.GetBool() && GetTeamNumber() == TF_TEAM_PVE_INVADERS && g_pPopulationManager )
 		{
 			g_pPopulationManager->RemovePlayerAndItemUpgradesFromHistory( this );
 		}
@@ -7544,7 +7544,7 @@ int CTFPlayer::GetAutoTeam( int nPreferedTeam /*= TF_TEAM_AUTOASSIGN*/ )
 						}
 					}
 				}
-					return TFGameRules()->GetTeamAssignmentOverride( this, bf_gamemode_mvmvs.GetBool() ? TF_TEAM_PVE_DEFENDERS : nPreferedTeam );
+					return TFGameRules()->GetTeamAssignmentOverride( this, cf_gamemode_mvmvs.GetBool() ? TF_TEAM_PVE_DEFENDERS : nPreferedTeam );
 			}
 		}
 
@@ -7667,7 +7667,7 @@ bool CTFPlayer::ShouldForceAutoTeam( void )
 	if ( mp_forceautoteam.GetBool() )
 		return true;
 
-	if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() && !bf_gamemode_mvmvs.GetBool() )
+	if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() && !cf_gamemode_mvmvs.GetBool() )
 		return true;
 
 	if ( TFGameRules() && TFGameRules()->IsCompetitiveMode() )
@@ -8124,7 +8124,7 @@ void CTFPlayer::ChangeTeam( int iTeamNum, bool bAutoTeam, bool bSilent, bool bAu
 	BaseClass::ChangeTeam( iTeamNum, bAutoTeam, bSilent, bAutoBalance );
 
 	// Additional safety check: Clear upgrades when humans join Invaders team in MvM Versus
-	if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() && bf_gamemode_mvmvs.GetBool() && 
+	if ( TFGameRules() && TFGameRules()->IsMannVsMachineMode() && cf_gamemode_mvmvs.GetBool() && 
 		 !IsBot() && iTeamNum == TF_TEAM_PVE_INVADERS && g_pPopulationManager )
 	{
 		g_pPopulationManager->RemovePlayerAndItemUpgradesFromHistory( this );
@@ -9043,7 +9043,7 @@ bool CTFPlayer::ClientCommand( const CCommand &args )
 
 			if ( bArgsChecked )
 			{
-				if ( TFGameRules()->IsMannVsMachineMode() && GetTeamNumber() == TF_TEAM_PVE_INVADERS && bf_gamemode_mvmvs.GetBool() && iBuilding == OBJ_TELEPORTER && iMode == MODE_TELEPORTER_ENTRANCE )
+				if ( TFGameRules()->IsMannVsMachineMode() && GetTeamNumber() == TF_TEAM_PVE_INVADERS && cf_gamemode_mvmvs.GetBool() && iBuilding == OBJ_TELEPORTER && iMode == MODE_TELEPORTER_ENTRANCE )
 					return true;
 
 				StartBuildingObjectOfType( iBuilding, iMode );
@@ -21583,7 +21583,7 @@ bool CTFPlayer::CanHearAndReadChatFrom( CBasePlayer *pPlayer )
 		if ( IsHLTV() || IsReplay() )
 			return true;
 		
-		return ( GetTeamNumber() == pPlayer->GetTeamNumber() || bf_gamemode_mvmvs.GetBool() );
+		return ( GetTeamNumber() == pPlayer->GetTeamNumber() || cf_gamemode_mvmvs.GetBool() );
 	}
 
 	if ( pPlayer->m_lifeState != LIFE_ALIVE && m_lifeState == LIFE_ALIVE )
@@ -21845,7 +21845,7 @@ void CTFPlayer::NoteSpokeVoiceCommand(const char* pszScenePlayed)
 	{
 		m_iVoiceSpamCounter++;
 	}
-	if (bf_voicespam.GetBool())
+	if (cf_voicespam.GetBool())
 	{
 		m_flNextVoiceCommandTime = gpGlobals->curtime + tf_max_voice_speak_delay.GetFloat();
 	}

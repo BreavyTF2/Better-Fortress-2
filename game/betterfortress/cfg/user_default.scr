@@ -326,7 +326,7 @@ DESCRIPTION INFO_OPTIONS
 		{ "75" }
 	}
 	
-	"bf_medic_show_crit_heal_indicator"
+	"cf_medic_show_crit_heal_indicator"
 	{
 		"#TF_MedicShowCritHealIndicator"
 		"#Tooltip_MedicShowCritHealIndicator"
@@ -538,9 +538,9 @@ DESCRIPTION INFO_OPTIONS
 		{ "1" }
 	}
 
-	"bf_clean_spectator_hud"
+	"cf_clean_spectator_hud"
 	{
-		"#BF_CleanSpectatorHUD"
+		"#CF_CleanSpectatorHUD"
 		"#Tooltip_CleanSpectatorHUD"
 		{ BOOL }
 		{ "0" }
@@ -771,17 +771,17 @@ DESCRIPTION INFO_OPTIONS
 		{ "1" }
 	}
 
-	"bf_disable_cosmetics"
+	"cf_disable_cosmetics"
 	{
-		"#BF_DisableCosmetics"
+		"#CF_DisableCosmetics"
 		"#Tooltip_DisableCosmetics"
 		{ BOOL }
 		{ "0" }
 	}
 
-	"bf_disable_unusual_effects"
+	"cf_disable_unusual_effects"
 	{
-		"#BF_DisableUnusualEffects"
+		"#CF_DisableUnusualEffects"
 		"#Tooltip_DisableUnusualEffects"
 		{ BOOL }
 		{ "0" }

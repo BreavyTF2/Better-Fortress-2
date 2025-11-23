@@ -34,7 +34,7 @@ extern ConVar tf_mvm_respec_limit;
 extern ConVar tf_mvm_respec_credit_goal;
 extern ConVar tf_mvm_buybacks_method;
 extern ConVar tf_mvm_buybacks_per_wave;
-extern ConVar bf_gamemode_mvmvs;
+extern ConVar cf_gamemode_mvmvs;
 
 void MvMMissionCycleFileChangedCallback( IConVar *var, const char *pOldString, float flOldValue )
 {
@@ -1074,7 +1074,7 @@ void CPopulationManager::StartCurrentWave( void )
 	TFGameRules()->State_Transition( GR_STATE_RND_RUNNING );
 
 	// Give Invaders team players a chance to get the bomb at wave start in MvM Versus mode
-	if ( TFGameRules()->IsMannVsMachineMode() && bf_gamemode_mvmvs.GetBool() && bf_mvmvs_invader_bomb_chance.GetBool() )
+	if ( TFGameRules()->IsMannVsMachineMode() && cf_gamemode_mvmvs.GetBool() && bf_mvmvs_invader_bomb_chance.GetBool() )
 	{
 		GiveBombToRandomInvader();
 	}

@@ -26,7 +26,7 @@
 	}
 	"prefabs"
 	{
-		"bf_restored_item"
+		"cf_restored_item"
 		{
 			"moditem" 			"1"
 			"attributes"
@@ -39,7 +39,7 @@
 			}
 		}
 	
-		"bf_community_taunt"
+		"cf_community_taunt"
 		{
 			"public_prefab"			"1"
 			"qc_template"			"scripts/itemtest_qc_template_taunt.txt"
@@ -864,20 +864,25 @@
 					"attribute_class"  "attack_projectiles"
 					"value"							"1"
 				}
+				"fire rate bonus"
+				{
+					"attribute_class"	"mult_postfiredelay"
+					"value" "0.9"
+				}
+				"move speed penalty"
+				{
+					"attribute_class" 	"mult_player_movespeed"
+					"value" "0.7"
+				}
 				"spread penalty"
 				{
 					"attribute_class" 	"mult_spread_scale"
-					"value" "1.5"
+					"value" "1.25"
 				}
 				"no primary ammo from dispensers while active"
 				{
 					"attribute_class"	"no_primary_ammo_from_dispensers"	
 					"value"	"1"
-				}
-				"maxammo primary reduced"
-				{
-					"attribute_class"	"mult_maxammo_primary"
-					"value" "0.625"
 				}
 				"is blacklisted in mvm"
 				{
@@ -886,7 +891,7 @@
 				}
 			}
 		}
-		//Tux - Powerup canteen :)
+		//Tux - Powerup canteen :>
 		"1011"
 		{
 			"prefab"	"powerup_bottle"
@@ -904,25 +909,25 @@
 		//CUT - Mercenary Park Cap
 		"1191"
 		{
-			"prefab"	"bf_restored_item base_hat"
+			"prefab"	"cf_restored_item base_hat"
 			"item_quality" 		"rarity2"
 		}
 		//CUT - Mannanas Cap
 		"1192"
 		{
-			"prefab"	"bf_restored_item base_hat"
+			"prefab"	"cf_restored_item base_hat"
 			"item_quality" 		"rarity2"
 		}
 		//CUT - Never Forget Cap
 		"1193"
 		{
-			"prefab"	"bf_restored_item base_hat"
+			"prefab"	"cf_restored_item base_hat"
 			"item_quality" 		"rarity2"
 		}
 		//CUT - Yeti Park Hardhat
 		"1194"
 		{
-			"prefab"	"bf_restored_item base_hat"
+			"prefab"	"cf_restored_item base_hat"
 			"item_quality" 		"rarity2"
 		}
 		//Thermal thruster
@@ -983,9 +988,9 @@
 		"29000"
 		{
 			"name"	"Taunt: Gangnam Mercs"
-			"prefab"	"bf_community_taunt"
-			"item_name"	"#TBF_TauntGangnam"
-			"item_description"	"#TBF_TauntGangnam_Desc"
+			"prefab"	"cf_community_taunt"
+			"item_name"	"#TCF_TauntGangnam"
+			"item_description"	"#TCF_TauntGangnam_Desc"
 			"image_inventory"	"backpack/player/taunts/taunt_gangnam"
 			"image_inventory_size_w"	"128"
 			"image_inventory_size_h"	"82"
@@ -1062,10 +1067,10 @@
 		"29001"
 		{
 			"name"	"Taunt: Explosive Masterpiece"
-			"prefab"	"valve bf_community_taunt"
+			"prefab"	"valve cf_community_taunt"
 			"first_sale_date"		"2014/06/17"
-			"item_name"			"#TBF_TauntArtBoom"
-			"item_description"			"#TBF_TauntArtBoom_Desc"
+			"item_name"			"#TCF_TauntArtBoom"
+			"item_description"			"#TCF_TauntArtBoom_Desc"
 			"image_inventory"	"backpack/player/taunts/taunt_holder"
 			"image_inventory_size_w"	"128"
 			"image_inventory_size_h"	"82"
@@ -1092,7 +1097,7 @@
 		"29002"
 		{
 			"name"	"Taunt: Dirtkick "
-			"prefab"	"valve bf_community_taunt"
+			"prefab"	"valve cf_community_taunt"
 			"item_name"			"#OFFSHORE_TauntDirtkick"
 			"item_description"			"#OFFSHORE_TauntDirtkick_Desc"
 			"image_inventory"	"backpack/player/taunts/taunt_scoutkick"
@@ -1117,10 +1122,10 @@
 		"29003"
 		{
 			"name"	"Taunt: Trust Fall"
-			"prefab"	"valve bf_community_taunt"
+			"prefab"	"valve cf_community_taunt"
 			"first_sale_date"		"2014/06/17"
-			"item_name"			"#TBF_TauntKill_Trustfall"
-			"item_description"			"#TBF_TauntKill_Trustfall_Desc"
+			"item_name"			"#TCF_TauntKill_Trustfall"
+			"item_description"			"#TCF_TauntKill_Trustfall_Desc"
 			"item_type_name" 			"#TF_TauntKill_Community"
 			"image_inventory"	"backpack/player/taunts/tauntkill_trustfall"
 			"image_inventory_size_w"	"128"
@@ -1157,7 +1162,7 @@
 		"29004"
 		{
 			"name"	"Taunt: Texan Tacklin"
-			"prefab"	"no_craft bf_community_taunt"
+			"prefab"	"no_craft cf_community_taunt"
 			"first_sale_date"		"2025/06/15"
 			"item_name"			"#OFFSHORE_TauntFishing"
 			"item_description"	"#OFFSHORE_TauntFishing_Desc"
@@ -1238,7 +1243,7 @@
 		"29005"
 		{
 			"name"	"Taunt: Texan Tacklin (Box)"
-			"prefab"	"no_craft bf_community_taunt"
+			"prefab"	"no_craft cf_community_taunt"
 			"first_sale_date"		"2025/06/15"
 			"item_name"			"#OFFSHORE_TauntFishing"
 			"item_description"	"#OFFSHORE_TauntFishing_Desc"
@@ -1319,7 +1324,7 @@
 		"29006"
 		{
 			"name"	"Taunt: Streamsniper"
-			"prefab"	"bf_community_taunt"
+			"prefab"	"cf_community_taunt"
 			"item_name"	"#WS_DDAN_Taunt_StreamSniper"
 			"item_description"	"#WS_DDAN_Taunt_StreamSniper_Desc"
 			"image_inventory"	"backpack/player/taunts/taunt_ddan_streamsniper"
@@ -1786,7 +1791,7 @@
 		"32004"
 		{
 			"name"	"TF_WEAPON_TORCHLIGHT"
-			"prefab"	"weapon_fireaxe bf_restored_item"
+			"prefab"	"weapon_fireaxe cf_restored_item"
 			"item_name"	"#TFCW_Torchlight"
 			"item_description"	"#TFCW_Torchlight_Desc"
 			"item_quality"	"rarity2"
