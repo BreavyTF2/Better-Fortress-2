@@ -7,6 +7,18 @@
 #include "cbase.h"
 #include "tf_weapon_fireaxe.h"
 
+#ifdef GAME_DLL
+#include "tf_player.h"
+#else
+#include "c_tf_player.h"
+#endif
+//Set any FireAxe particles and their attachements below.
+#define FIREAXE_BEACON_PARTICLE	 "balefulcandle"
+#define FIREAXE_BEACON_ATTACHMENT	"candle"
+
+#define FIREAXE_DRG_PARTICLE	"drg_3rd_idle"
+#define FIREAXE_DRG_ATTACHMENT		"electrode_0"
+
 //=============================================================================
 //
 // Weapon FireAxe tables.
@@ -47,47 +59,81 @@ void CTFFireAxe::Precache( void )
 bool CTFFireAxe::Holster( CBaseCombatWeapon *pSwitchingTo )
 {
 #ifdef CLIENT_DLL
-	m_bEffectsThinking = false;
+	StopClientEffects();
 #endif
 
 	return BaseClass::Holster( pSwitchingTo );
 }
-bool CTFFireAxe::Deploy( void )
-{
-//Certain fireaxes like the Third Degree and Baleful Beacon have special particle effects when out.
 #ifdef CLIENT_DLL
-	m_ParticleEffect = NULL;
-	m_bEffectsThinking = true;
-	ClientEffectsThink();
-#endif
-	return BaseClass::Deploy();
+//-----------------------------------------------------------------------------
+// Purpose: Certain FireAxes have particles attached to the weapon.
+//-----------------------------------------------------------------------------
+void CTFFireAxe::UpdateVisibility( void )
+{
+	BaseClass::UpdateVisibility();
+	StartClientEffects();
 }
-#ifdef CLIENT_DLL
-void CTFFireAxe::ClientEffectsThink( void )
+void CTFFireAxe::StartClientEffects( void )
 {
-	CTFPlayer* pPlayer = GetTFPlayerOwner();
-	float flSoulDefense = 0.f;
+	StopClientEffects();
+
+	C_TFPlayer *pOwner = GetTFPlayerOwner();
+	
+	if ( !pOwner )
+		return;
+	
+	const char *pszParticleEffect = NULL;
+	const char *pszAttachmentName = NULL;
+
+	m_hEffectOwner = NULL;
+	bool bIsVM = false;
+
+	int iBeacon = 0;
 	int iDRG = 0;
-	CALL_ATTRIB_HOOK_FLOAT(flSoulDefense, mod_soul_defense);
+	CALL_ATTRIB_HOOK_FLOAT(iBeacon, mod_ghostly_dash);
 	CALL_ATTRIB_HOOK_INT(iDRG, damage_all_connected);
-	if ( flSoulDefense || iDRG ) {
-		if ( !pPlayer )
-			return;
-
-		if ( !m_bEffectsThinking )
-			return;
-
-		if ( !GetOwner() || GetOwner()->GetActiveWeapon() != this )
-			return;
-
-		SetContextThink( &CTFFireAxe::ClientEffectsThink, gpGlobals->curtime + 0.1f, "EFFECTS_THINK" );
-		
+	
+	if (iBeacon) {
+		pszParticleEffect = FIREAXE_BEACON_PARTICLE;
+		pszAttachmentName = FIREAXE_BEACON_ATTACHMENT;
+	} 
+	else if (iDRG) {
+		pszParticleEffect = FIREAXE_DRG_PARTICLE;
+		pszAttachmentName = FIREAXE_DRG_ATTACHMENT;
+	} 
+	else return;
+	
+	if ( ( pOwner == C_TFPlayer::GetLocalTFPlayer() ) && ( ::input->CAM_IsThirdPerson() == false ) )
+	{
+		m_hEffectOwner = pOwner->GetViewModel();
+		bIsVM = true;
 	}
-	if (flSoulDefense && !m_ParticleEffect) {
-	m_ParticleEffect = GetAppropriateWorldOrViewModel()->ParticleProp()->Create( "balefulcandle", PATTACH_POINT_FOLLOW, "candle" );
+	else
+	{
+		m_hEffectOwner = this;
 	}
-	if (iDRG && !m_ParticleEffect) {
-	m_ParticleEffect = GetAppropriateWorldOrViewModel()->ParticleProp()->Create( "drg_3rd_idle", PATTACH_POINT_FOLLOW, "electrode_0" );
+
+	if ( m_hEffectOwner )
+	{
+		int iAttachment = m_hEffectOwner->LookupAttachment( pszAttachmentName );
+		if ( iAttachment ) { //Check to make sure attachment is valid.
+			m_pFireAxeEffect = m_hEffectOwner->ParticleProp()->Create( pszParticleEffect, PATTACH_POINT_FOLLOW, iAttachment );
+			
+			if ( bIsVM )
+			{
+				m_pFireAxeEffect->SetIsViewModelEffect( true );
+				ClientLeafSystem()->SetRenderGroup( m_pFireAxeEffect->RenderHandle(), RENDER_GROUP_VIEW_MODEL_TRANSLUCENT );
+			}
+		}
+	}
+}
+void CTFFireAxe::StopClientEffects( void )
+{
+	if ( m_pFireAxeEffect && m_hEffectOwner )
+	{
+		m_hEffectOwner->ParticleProp()->StopEmission( m_pFireAxeEffect );
+		m_pFireAxeEffect = NULL;
+		m_hEffectOwner = NULL;
 	}
 }
 //-----------------------------------------------------------------------------

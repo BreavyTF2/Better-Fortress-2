@@ -34,14 +34,14 @@ public:
 #ifdef GAME_DLL
 	virtual float GetInitialAfterburnDuration() const OVERRIDE;
 #endif
-
 	virtual void Precache( void ) OVERRIDE;
 	virtual bool Holster( CBaseCombatWeapon *pSwitchingTo ) OVERRIDE;
-	virtual bool Deploy( void ) OVERRIDE;
 #ifdef CLIENT_DLL
-	void ClientEffectsThink( void );
-	bool m_bEffectsThinking;
-	HPARTICLEFFECT		m_ParticleEffect;
+	virtual void UpdateVisibility( void ) OVERRIDE;
+	void StartClientEffects( void );
+	void StopClientEffects( void );
+	CNewParticleEffect *m_pFireAxeEffect;
+	EHANDLE m_hEffectOwner;
 	virtual bool		ShouldDrawMeter() const OVERRIDE;
 #endif
 
