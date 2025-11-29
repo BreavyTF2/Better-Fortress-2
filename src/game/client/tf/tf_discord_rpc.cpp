@@ -290,6 +290,10 @@ void CTFDiscordRPC::UpdateServerInfo()
 			pszGameType = "Passtime";
 			pszGameTypeShort = "pass";
 			break;
+		case TF_GAMETYPE_RAID:
+			pszGameType = "Raid";
+			pszGameTypeShort = "raid";
+			break;
 		default:
 			pszGameType = "Unknown";
 			pszGameTypeShort = "unknown";
