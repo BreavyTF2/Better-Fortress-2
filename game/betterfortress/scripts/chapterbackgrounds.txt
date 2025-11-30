@@ -1,3 +1,4 @@
+//Disabled background maps (affects users performance sadly)
 "chapters"
 {
 	1	"background_gravelpit"
