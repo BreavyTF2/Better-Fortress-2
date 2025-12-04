@@ -50,13 +50,19 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           mkdir -p ~/.ccache
-          # Config must be inside CCACHE_DIR for container to find it
-          echo "max_size = 2G" > ~/.ccache/ccache.conf
-          echo "compression = true" >> ~/.ccache/ccache.conf
-          echo "hash_dir = false" >> ~/.ccache/ccache.conf
-          echo "base_dir = /my_mod" >> ~/.ccache/ccache.conf
-          echo "sloppiness = include_file_mtime,include_file_ctime,time_macros,pch_defines,file_stat_matches,locale,system_headers" >> ~/.ccache/ccache.conf
-          echo "log_file = /ccache/ccache.log" >> ~/.ccache/ccache.conf
+          # Create ccache.conf - this will be mounted to /ccache in container
+          cat > ~/.ccache/ccache.conf << 'EOF'
+          max_size = 2G
+          compression = true
+          hash_dir = false
+          base_dir = /my_mod/src
+          sloppiness = include_file_mtime,include_file_ctime,time_macros,pch_defines,file_stat_matches,locale,system_headers,clang_index_store
+          log_file = /ccache/ccache.log
+          direct_mode = false
+          debug = true
+          EOF
+          # Remove leading whitespace from heredoc
+          sed -i 's/^[[:space:]]*//' ~/.ccache/ccache.conf
           echo "Created ccache.conf:"
           cat ~/.ccache/ccache.conf
 
@@ -74,9 +80,9 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: src/_vpc_
-          key: ${{ runner.os }}-vpc-v3-${{ hashFiles('src/**/*.vpc', 'src/**/vpc_scripts/**') }}
+          key: ${{ runner.os }}-vpc-v4-${{ hashFiles('src/**/*.vpc', 'src/**/vpc_scripts/**') }}
           restore-keys: |
-            ${{ runner.os }}-vpc-v3-
+            ${{ runner.os }}-vpc-v4-
 
       - name: Restore Windows build cache
         if: runner.os == 'Windows'
@@ -120,11 +126,20 @@ jobs:
         run: |
           echo "=== ccache statistics before build ==="
           ccache -s || true
+          echo ""
+          echo "=== Zero ccache stats for clean measurement ==="
+          ccache -z || true
+          echo ""
           echo "=== ccache config ==="
           cat ~/.ccache/ccache.conf || true
+          echo ""
+          echo "=== Verify ccache is accessible ==="
+          which ccache || echo "ccache not found in PATH"
+          ccache --version || echo "ccache version check failed"
+          echo ""
           echo "=== Check if ninja uses ccache ==="
           if [ -f src/_vpc_/ninja/sdk_everything_release.ninja ]; then
-            head -50 src/_vpc_/ninja/sdk_everything_release.ninja | grep -E "(cc|cxx|CC|CXX|g\+\+|gcc)" || echo "No compiler refs in first 50 lines"
+            grep -E "^rule (cc|cxx)" src/_vpc_/ninja/sdk_everything_release.ninja -A2 | head -20 || echo "No compiler rules found"
           fi
         shell: bash
 
@@ -203,14 +218,23 @@ jobs:
       - name: Show ccache stats (Linux)
         if: runner.os == 'Linux'
         run: |
-          echo "=== ccache statistics ==="
-          ccache -s
+          echo "=== ccache directory contents ==="
+          ls -la ~/.ccache/ || echo "~/.ccache not found"
           echo ""
-          echo "=== ccache log (last 100 lines) ==="
-          tail -100 ~/.ccache/ccache.log 2>/dev/null || echo "No log file found"
+          echo "=== ccache statistics (from host) ==="
+          CCACHE_DIR=~/.ccache ccache -s || echo "ccache -s failed"
           echo ""
-          echo "=== Uncacheable reasons ==="
-          grep -oE "Result: [a-z_]+" ~/.ccache/ccache.log 2>/dev/null | sort | uniq -c | head -20 || echo "No results found in log"
+          echo "=== ccache configuration ==="
+          cat ~/.ccache/ccache.conf || echo "No config file"
+          echo ""
+          echo "=== ccache stats file ==="
+          cat ~/.ccache/stats 2>/dev/null || echo "No stats file found"
+          echo ""
+          echo "=== ccache log (last 200 lines) ==="
+          tail -200 ~/.ccache/ccache.log 2>/dev/null || echo "No log file found"
+          echo ""
+          echo "=== Uncacheable reasons (from log) ==="
+          grep -oE "Result: [a-z_]+" ~/.ccache/ccache.log 2>/dev/null | sort | uniq -c | sort -rn | head -20 || echo "No results found in log"
         shell: bash
 
       - name: Save ccache (Linux)
@@ -225,7 +249,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: src/_vpc_
-          key: ${{ runner.os }}-vpc-v3-${{ hashFiles('src/**/*.vpc', 'src/**/vpc_scripts/**') }}
+          key: ${{ runner.os }}-vpc-v4-${{ hashFiles('src/**/*.vpc', 'src/**/vpc_scripts/**') }}
 
       - name: Save Windows build cache
         if: runner.os == 'Windows'
